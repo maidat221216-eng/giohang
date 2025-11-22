@@ -26,31 +26,28 @@ const ListProducts_SP = () => {
     fetchProducts();
   }, []);
 
-  // Hàm xử lý khi bấm "Thêm vào giỏ"
   const handleAddToCart = (e, product) => {
-    // 🛑 QUAN TRỌNG: Ngăn sự kiện click lan ra thẻ cha (tránh chuyển trang)
     e.stopPropagation();
-
     addToCart(product);
     alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Danh sách sản phẩm</h2>
-
+      {" "}
+      <h2>Discover our games</h2>
+      ```
       <div
         style={{
           display: "grid",
           width: "1000px",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
           gap: "20px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", // ✅ sửa ở đây
         }}
       >
         {listProduct.map((p) => (
           <div
             key={p.id}
-            // Sự kiện click vào thẻ -> Chuyển sang trang chi tiết
             onClick={() => navigate(`/detail/${p.id}`)}
             style={{
               border: "1px solid #ddd",
@@ -61,7 +58,7 @@ const ListProducts_SP = () => {
               background: "#fff",
               boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              display: "flex", // Flex để căn chỉnh chiều cao
+              display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
             }}
@@ -74,7 +71,6 @@ const ListProducts_SP = () => {
               e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
             }}
           >
-            {/* Phần nội dung sản phẩm */}
             <div>
               <div
                 style={{
@@ -91,11 +87,7 @@ const ListProducts_SP = () => {
                 <img
                   src={p.image}
                   alt={p.title}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </div>
 
@@ -109,7 +101,7 @@ const ListProducts_SP = () => {
                 {p.title}
               </h4>
               <p style={{ color: "#e63946", fontWeight: "bold", margin: "0" }}>
-                ${p.price}
+                {p.price}
               </p>
               <small
                 style={{
@@ -122,9 +114,8 @@ const ListProducts_SP = () => {
               </small>
             </div>
 
-            {/* ✅ 3. Nút Thêm vào giỏ */}
             <button
-              onClick={(e) => handleAddToCart(e, p)} // Truyền event 'e' vào
+              onClick={(e) => handleAddToCart(e, p)}
               style={{
                 width: "100%",
                 padding: "10px",
