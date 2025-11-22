@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
-import { useCart } from "./CartContext"; // ✅ 1. Import Context
+import { useCart } from "./CartContext";
 
 const ListProducts_SP = () => {
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
-
-  // ✅ 2. Lấy hàm addToCart từ Context
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -40,9 +38,10 @@ const ListProducts_SP = () => {
       <div
         style={{
           display: "grid",
-          width: "1000px",
           gap: "20px",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", // ✅ sửa ở đây
+          gridTemplateColumns: "repeat(3, 1fr)", // chỉ 3 sản phẩm trên 1 hàng
+          maxWidth: "1200px",
+          margin: "0 auto", // căn giữa
         }}
       >
         {listProduct.map((p) => (
@@ -52,7 +51,7 @@ const ListProducts_SP = () => {
             style={{
               border: "1px solid #ddd",
               borderRadius: "10px",
-              padding: "12px",
+              padding: "16px", // tăng padding để sản phẩm to hơn
               textAlign: "center",
               cursor: "pointer",
               background: "#fff",
@@ -75,7 +74,7 @@ const ListProducts_SP = () => {
               <div
                 style={{
                   width: "100%",
-                  height: "200px",
+                  height: "300px", // tăng chiều cao hình ảnh
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -94,8 +93,8 @@ const ListProducts_SP = () => {
               <h4
                 style={{
                   margin: "10px 0 5px",
-                  fontSize: "1rem",
-                  minHeight: "40px",
+                  fontSize: "1.1rem", // tăng cỡ chữ tiêu đề
+                  minHeight: "50px",
                 }}
               >
                 {p.title}
@@ -118,7 +117,7 @@ const ListProducts_SP = () => {
               onClick={(e) => handleAddToCart(e, p)}
               style={{
                 width: "100%",
-                padding: "10px",
+                padding: "12px", // tăng padding nút
                 backgroundColor: "#007bff",
                 color: "white",
                 border: "none",
