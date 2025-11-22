@@ -54,6 +54,9 @@ const Layout = () => {
               <li>
                 <a href="/trang2">SUPPORT</a>
               </li>
+              <li>
+                <a href="/admin/products">QUẢN TRỊ</a>
+              </li>
             </ul>
           </div>
 
