@@ -1,41 +1,51 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import anhlogo1 from "./assets/images/keylogin.png";
-import "./assets/css/login.css";
+import { supabase } from "./supabaseClient"; // Import supabase client từ supabaseClient.js
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // Lưu lỗi đăng nhập
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null); // Reset lỗi trước khi bắt đầu đăng nhập
 
-    setTimeout(() => {
-      if (username.trim() && password.trim()) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ username, role: "user" })
-        );
-        alert("✅ Đăng nhập thành công!");
-        navigate("/");
-      } else {
-        alert("❌ Vui lòng nhập đầy đủ thông tin!");
+    try {
+      // Đăng nhập với Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: username,
+        password: password,
+      });
+
+      if (error) {
+        throw error; // Nếu có lỗi thì ném ra
       }
+
+      // Lưu thông tin người dùng vào localStorage sau khi đăng nhập thành công
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ username: data.user.email, role: "user" })
+      );
+      alert("✅ Đăng nhập thành công!");
+      navigate("/"); // Chuyển hướng sau khi đăng nhập thành công
+    } catch (err) {
+      console.error("Error logging in:", err.message);
+      setError("❌ Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <img src={anhlogo1} alt="Logo" className="login-logo" />
-
         <h2 className="login-title">Đăng nhập vào tài khoản</h2>
-        <p className="login-subtitle">Sử dụng tài khoản của bạn để tiếp tục</p>
-
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Hiển thị lỗi nếu có */}
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
             <label>Tên đăng nhập</label>
@@ -61,28 +71,6 @@ const LoginPage = () => {
             {loading ? "⏳ Đang xử lý..." : "Đăng nhập"}
           </button>
         </form>
-
-        <p className="register-link">
-          Bạn chưa có tài khoản? <a href="#">Tạo tài khoản mới</a>
-        </p>
-
-        <div className="social-login">
-          <button className="social-btn google">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png"
-              alt="Google"
-            />
-            <span>Đăng nhập Google</span>
-          </button>
-
-          <button className="social-btn facebook">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-              alt="Facebook"
-            />
-            <span>Facebook</span>
-          </button>
-        </div>
       </div>
     </div>
   );

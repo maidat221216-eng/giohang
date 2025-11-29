@@ -34,7 +34,6 @@ const ListProducts_SP = () => {
     <div style={{ padding: "20px" }}>
       {" "}
       <h2>Discover our games</h2>
-      ```
       <div
         style={{
           display: "grid",
@@ -47,7 +46,7 @@ const ListProducts_SP = () => {
         {listProduct.map((p) => (
           <div
             key={p.id}
-            onClick={() => navigate(`/detail/${p.id}`)}
+            onClick={() => navigate(`/sanpham/${p.id}`)}
             style={{
               border: "1px solid #ddd",
               borderRadius: "10px",
@@ -100,7 +99,7 @@ const ListProducts_SP = () => {
                 {p.title}
               </h4>
               <p style={{ color: "#e63946", fontWeight: "bold", margin: "0" }}>
-                {p.price}
+                ${p.price}
               </p>
               <small
                 style={{
