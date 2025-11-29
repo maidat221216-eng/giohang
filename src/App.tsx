@@ -25,15 +25,20 @@ import ListProducts_SP_Admin from "./ListProducts_SP_Admin";
 // @ts-ignore
 import EditProduct from "./EditProduct";
 
+// @ts-ignore
 import ChatPage from "./ChatPage"; // ✅ Import trang Chat
 
 // --- IMPORT MỚI CHO GIỎ HÀNG ---
-import { CartProvider } from "./CartContext"; // Context vừa sửa ở Bước 1
-import CartPage from "./CartPage"; // Trang hiển thị giỏ hàng (Xem bước 3)
+// @ts-ignore
+import { CartProvider } from "./CartContext"; // Context giỏ hàng
+// @ts-ignore
+import CartPage from "./CartPage"; // Trang giỏ hàng
+// @ts-ignore
+import CheckoutPage from "./CheckoutPage"; // ✅ Trang thanh toán
 
 export default function App() {
   return (
-    // ✅ 1. Bọc Provider ở ngoài cùng để state giỏ hàng sống toàn app
+    // ✅ Bọc Provider ở ngoài cùng để state giỏ hàng sống toàn app
     <CartProvider>
       <BrowserRouter>
         <Routes>
@@ -41,14 +46,23 @@ export default function App() {
             {/* Trang chủ hiển thị danh sách sản phẩm */}
             <Route index element={<ListProducts_SP />} />
 
-            {/* ✅ 2. Thêm Route cho Giỏ Hàng */}
+            {/* ✅ Route cho Giỏ Hàng */}
             <Route path="cart" element={<CartPage />} />
 
+            {/* ✅ Route cho Checkout */}
+            <Route path="checkout" element={<CheckoutPage />} />
+
+            {/* Route Chat */}
             <Route path="chat" element={<ChatPage />} />
 
+            {/* Các trang khác */}
             <Route path="trang1" element={<Trang1 />} />
             <Route path="trang2" element={<Trang2 />} />
+
+            {/* Route chi tiết sản phẩm */}
             <Route path="sanpham/:id" element={<Chitietsanpham />} />
+
+            {/* Route admin */}
             <Route path="/admin/edit/:id" element={<EditProduct />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="logout" element={<LogoutPage />} />

@@ -1,72 +1,109 @@
-// src/Chitietsanpham.js
+// chitietsanpham.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { supabase } from "./supabaseClient";
+import { useCart } from "./CartContext";
 
 export default function Chitietsanpham() {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Gọi API để lấy thông tin sản phẩm theo id
     const fetchProduct = async () => {
       try {
-        const response = await fetch(
-          `https://68f97a99ef8b2e621e7c302b.mockapi.io/products/${id}`
-        );
-        if (!response.ok) {
-          throw new Error("Không thể tải sản phẩm!");
-        }
-        const data = await response.json();
+        const { data, error } = await supabase
+          .from("product1")
+          .select("*")
+          .eq("id", Number(id))
+          .single();
+        if (error) throw error;
         setProduct(data);
       } catch (err) {
-        setError(err.message);
+        console.error("Lỗi khi lấy sản phẩm:", err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProduct();
   }, [id]);
 
-  if (loading) {
-    return <p style={{ padding: 20 }}>Đang tải dữ liệu...</p>;
-  }
-
-  if (error || !product) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h3>Không tìm thấy sản phẩm!</h3>
-        <p>{error}</p>
-        <button onClick={() => navigate("/trang1")}>Quay lại Trang 1</button>
-      </div>
-    );
-  }
+  if (loading) return <p>Đang tải sản phẩm...</p>;
+  if (!product) return <p>Không tìm thấy sản phẩm.</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: "20px" }}>
+    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem" }}>
+      <button onClick={() => navigate(-1)} style={{ marginBottom: "1rem" }}>
         ⬅ Quay lại
       </button>
 
-      <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-        <img
-          src={product.image}
-          alt={product.title}
-          style={{ width: "250px", height: "250px", objectFit: "contain" }}
-        />
-        <div>
+      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+        <div style={{ flex: "1 1 300px" }}>
+          <img
+            src={product.image}
+            alt={product.title}
+            style={{ width: "100%", borderRadius: "10px" }}
+          />
+        </div>
+
+        <div style={{ flex: "1 1 300px" }}>
           <h2>{product.title}</h2>
-          <p>
-            <strong>Giá:</strong> ${product.price}
+          <p
+            style={{ color: "#e63946", fontWeight: "bold", fontSize: "1.5rem" }}
+          >
+            ${product.price}
           </p>
           <p>
-            <strong>Loại:</strong> {product.category}
+            ⭐ {product.rating_rate} | ({product.rating_count} đánh giá)
           </p>
-          <p style={{ maxWidth: "400px" }}>{product.description}</p>
+          <p>{product.description}</p>
+
+          <button
+            onClick={() => {
+              addToCart(product);
+              alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
+            }}
+            style={{
+              padding: "12px 24px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              marginTop: "1rem",
+              fontWeight: "600",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#0056b3")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "#007bff")
+            }
+          >
+            🛒 Thêm vào giỏ
+          </button>
+
+          {/* Nút mở video trên tab mới */}
+          {product.video_url && (
+            <div style={{ marginTop: "1rem" }}>
+              <button
+                onClick={() => window.open(product.video_url, "_blank")}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#e63946",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  marginTop: "1rem",
+                }}
+              >
+                Xem video sản phẩm
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

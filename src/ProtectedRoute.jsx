@@ -1,15 +1,24 @@
-// Sửa ngày 4/11/2025 vì fix lỗi không truy cập được trang quản trị Admin
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-// ✅ Component bảo vệ route
 const ProtectedRoute = ({ children, roleRequired }) => {
-  // Lấy dữ liệu user từ localStorage
-  const userData = localStorage.getItem("user");
-  const user = userData ? JSON.parse(userData) : null;
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-  // Nếu chưa đăng nhập → chuyển về trang đăng nhập
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    setUser(userData ? JSON.parse(userData) : null);
+    setLoading(false);
+  }, []); // <= DÒNG CỰC QUAN TRỌNG
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: "50px" }}>
+        Đang kiểm tra quyền...
+      </div>
+    );
+  }
+
   if (!user) {
     return (
       <Navigate
@@ -20,13 +29,11 @@ const ProtectedRoute = ({ children, roleRequired }) => {
     );
   }
 
-  // Nếu route yêu cầu quyền admin → kiểm tra username
-  if (roleRequired === "admin" && user.username !== "admin") {
+  if (roleRequired === "admin" && user.role !== 1) {
     alert("❌ Bạn không có quyền truy cập trang quản trị!");
     return <Navigate to="/" replace />;
   }
 
-  // Nếu hợp lệ → render nội dung bên trong
   return children;
 };
 
