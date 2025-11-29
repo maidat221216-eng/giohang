@@ -77,7 +77,7 @@ const Layout = () => {
                 alignItems: "center",
               }}
             >
-              🛒 Giỏ hàng
+              🛒
               {totalQuantity > 0 && (
                 <span
                   style={{
@@ -135,7 +135,45 @@ const Layout = () => {
         </div>
       </main>
 
-      <footer className="footer">Footer</footer>
+      {/* FOOTER LIÊN HỆ */}
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="contact-info">
+            <h3>Liên hệ với chúng tôi</h3>
+            <ul>
+              <li>
+                <strong>Email:</strong>{" "}
+                <a href="mailto:support@example.com">maidat221216@gmail.com</a>
+              </li>
+              <li>
+                <strong>Điện thoại:</strong>{" "}
+                <a href="tel:+123456789">+84 352624479</a>
+              </li>
+              <li>
+                <strong>Địa chỉ:</strong> 147/1F Đường Lê Đình Cẩn, Quận Bình
+                Tân, Thành phố Hồ Chí Minh
+              </li>
+            </ul>
+          </div>
+
+          <div className="social-media">
+            <h3>Theo dõi chúng tôi</h3>
+            <ul>
+              <li>
+                <a href="https://www.facebook.com/cc.thanhdat/" target="_blank">
+                  Facebook
+                </a>
+              </li>
+
+              <li>
+                <a href="https://www.instagram.com/darkmyy_/" target="_blank">
+                  Instagram
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
